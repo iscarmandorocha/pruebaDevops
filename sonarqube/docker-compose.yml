@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  sonarqube:
+    container_name: sonarqube
+    image: sonarqube:9-community
+    ports:
+      - "9000:9000"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+    depends_on:
+      - sonarqube-db
+    restart: unless-stopped
+  sonarqube-db:
+    container_name: sonarqube-bd
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=sonarqube
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+    restart: unless-stopped
+volumes:
+  sonarqube_data:
+networks:
+  default:
+    external:
+      name: network_jenkins
+
+#TOKEN para sonar: squ_9b808c4ad6c9387c6bceb390bc13a64bd99c465c
